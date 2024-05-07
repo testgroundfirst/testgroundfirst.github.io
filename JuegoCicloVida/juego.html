@@ -26,6 +26,7 @@
             { name: 'PreInfancia', backgroundImage: '1.png', playerImage: 'bebe.png', friend1: "bebe.png", w: 150, h: 150 },
             { name: 'Infancia', backgroundImage: '2.png', playerImage: 'niño.png', friend1: "bebe.png", w: 200, h: 270 },
             { name: 'Adolescencia', backgroundImage: '3.png', playerImage: 'adolecente.png', friend1: "muerte.png", w: 208, h: 678 },
+            { name: 'Duelo', backgroundImage: '4.3.png', playerImage: 'adolecente.png', w: 208, h: 678, },
             { name: 'Adultez', backgroundImage: '5.png', playerImage: 'adulto.png', friend1: "muerte.png", w: 305, h: 678 },
             { name: 'Vejez', backgroundImage: '7.png', playerImage: 'viejo.png', friend1: "muerte.png", w: 290, h: 648 },
             { name: 'Muerte', backgroundImage: '8.png', playerImage: 'viejo.png', friend1: "muerte.png", w: 290, h: 648 }
@@ -102,14 +103,14 @@
 
             }
 
-            if (currentLevel == 4) {
+            if (currentLevel == 5) {
 
                 ctx.drawImage(friend1, player.x - 400, player.y, player.width, player.height);
 
 
             }
 
-            if (currentLevel == 5) {
+            if (currentLevel == 6) {
 
                 ctx.drawImage(friend1, player.x - 250, player.y, player.width, player.height);
 
