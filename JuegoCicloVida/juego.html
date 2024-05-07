@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>El Ciclo de la Vida</title>
+    <style>
+        canvas {
+            width: 90vw;
+            height: 90vh;
+            border: 1px solid black;
+            display: block;
+            margin: auto;
+
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="gameCanvas"></canvas>
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+
+        let currentLevel = 1;
+        const levels = [
+            { name: 'PreInfancia', backgroundImage: '1.png', playerImage: 'bebe.png', friend1: "bebe.png", w: 150, h: 150 },
+            { name: 'Infancia', backgroundImage: '2.png', playerImage: 'niño.png', friend1: "bebe.png", w: 200, h: 270 },
+            { name: 'Adolescencia', backgroundImage: '3.png', playerImage: 'adolecente.png', friend1: "muerte.png", w: 208, h: 678 },
+            { name: 'Adultez', backgroundImage: '5.png', playerImage: 'adulto.png', friend1: "muerte.png", w: 305, h: 678 },
+            { name: 'Vejez', backgroundImage: '7.png', playerImage: 'viejo.png', friend1: "muerte.png", w: 290, h: 648 },
+            { name: 'Muerte', backgroundImage: '8.png', playerImage: 'viejo.png', friend1: "muerte.png", w: 290, h: 648 }
+        ];
+
+        let player = { x: 100, y: canvas.height / 2, width: 50, height: 50, velocityY: 0, isJumping: false };
+
+        let gameOver = false;
+        let playerSpeed = 20;
+
+        let backgroundImage = new Image();
+        let playerImage = new Image();
+        let friend1 = new Image();
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+
+        function drawLevel() {
+            const level = levels[currentLevel - 1];
+            ctx.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = 'black';
+            ctx.font = '30px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText(`Nivel ${currentLevel}: ${level.name}`, canvas.width / 2, 30);
+
+        }
+
+        function drawPlayer() {
+            ctx.drawImage(playerImage, player.x, player.y, player.width, player.height);
+        }
+
+        function drawPerson() {
+            ctx.drawImage(friend1, player.x - 20, player.y, player.width, player.height);
+        }
+
+        function loadImages(level) {
+            backgroundImage.src = level.backgroundImage;
+            playerImage.src = level.playerImage;
+            friend1.src = level.friend1;
+        }
+
+        function updatePlayerPosition() {
+            player.velocityY += 0.5;
+            player.y += player.velocityY;
+
+            if (player.y + player.height > canvas.height) {
+                player.y = canvas.height - player.height;
+                player.velocityY = 0;
+            } else if (player.y < 0) {
+                player.y = 0;
+                player.velocityY = 0;
+            }
+
+            if (currentLevel == 3) {
+
+                if (player.x + player.width >= (canvas.width / 2)) {
+                    backgroundImage.src = "4.png"
+                    ctx.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
+                }
+                if (player.x + player.width >= (3 * canvas.width / 4)) {
+                    backgroundImage.src = "4.1.png"
+                    ctx.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
+                }
+
+
+            }
+
+            if (currentLevel == 3) {
+
+                ctx.drawImage(friend1, player.x - 600, player.y, player.width, player.height);
+
+
+            }
+
+            if (currentLevel == 4) {
+
+                ctx.drawImage(friend1, player.x - 400, player.y, player.width, player.height);
+
+
+            }
+
+            if (currentLevel == 5) {
+
+                ctx.drawImage(friend1, player.x - 250, player.y, player.width, player.height);
+
+
+            }
+
+
+
+            if (player.x + player.width >= (canvas.width / 2)) {
+
+            }
+
+            if (player.x + player.width >= canvas.width) {
+                advanceLevel();
+            }
+        }
+
+        function jump() {
+            if (!player.isJumping) {
+                player.velocityY = -10;
+                player.isJumping = true;
+            }
+        }
+
+        function advanceLevel() {
+            if (currentLevel < levels.length) {
+                currentLevel++;
+                loadImages(levels[currentLevel - 1]);
+                player.width = levels[currentLevel - 1].w
+                player.height = levels[currentLevel - 1].h
+                player.x = 100;
+            } else {
+                gameOver = true;
+            }
+        }
+
+        function resetGame() {
+            currentLevel = 1;
+            player = { x: 100, y: canvas.height / 2, width: levels[0].w, height: levels[0].h, velocityY: 0, isJumping: false };
+            gameOver = false;
+            loadImages(levels[0]);
+        }
+
+        function gameLoop() {
+            resizeCanvas();
+
+            if (!gameOver) {
+                drawLevel();
+                if (currentLevel < 6) {
+                    drawPlayer();
+
+                }
+                updatePlayerPosition();
+
+
+
+                requestAnimationFrame(gameLoop);
+            } else {
+                ctx.fillStyle = 'black';
+                ctx.font = '50px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText('Juego Terminado', canvas.width / 2, canvas.height / 2);
+                ctx.font = '30px Arial';
+                ctx.fillText('Haz clic para reiniciar', canvas.width / 2, canvas.height / 2 + 50);
+            }
+        }
+
+        document.addEventListener('keydown', event => {
+            switch (event.code) {
+                case 'ArrowUp':
+                    jump();
+                    break;
+                case 'ArrowLeft':
+                    player.x -= playerSpeed;
+                    break;
+                case 'ArrowRight':
+                    player.x += playerSpeed;
+                    break;
+            }
+        });
+
+        canvas.addEventListener('click', () => {
+            if (gameOver) {
+                resetGame();
+                gameLoop();
+            }
+        });
+
+        resetGame();
+        gameLoop();
+    </script>
+</body>
+
+</html>
